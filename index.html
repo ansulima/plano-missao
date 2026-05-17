@@ -39,6 +39,7 @@
       position: relative;
       z-index: 1;
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -106,7 +107,7 @@
     /* ── moldura da imagem ── */
     .frame {
       position: relative;
-      width: min(380px, 90vw);
+      width: min(420px, 88vw);
       opacity: 0;
       animation: fadeUp 1s ease forwards .55s;
     }
@@ -220,6 +221,42 @@
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── tablet (até 900px) ── */
+    @media (max-width: 900px) {
+      .frame { width: min(440px, 80vw); }
+    }
+
+    /* ── smartphone (até 600px) ── */
+    @media (max-width: 600px) {
+      .page { padding: 32px 18px 40px; }
+      .ornament { margin-bottom: 24px; }
+      .ornament-line { width: 44px; }
+      .unidade { font-size: .66rem; margin-bottom: 14px; letter-spacing: .18em; }
+      .titulo { margin-bottom: 28px; }
+      .frame { width: min(360px, 92vw); }
+      .versiculo { font-size: .8rem; bottom: 14px; padding: 0 12px; }
+      .sep { margin: 26px 0 22px; }
+      .btn { padding: 12px 26px; font-size: .74rem; letter-spacing: .14em; }
+      .footer { margin-top: 36px; font-size: .66rem; padding: 0 12px; }
+    }
+
+    /* ── smartphone bem pequeno (até 380px) ── */
+    @media (max-width: 380px) {
+      .frame { width: 94vw; }
+      .versiculo { font-size: .74rem; }
+      .btn { padding: 11px 22px; font-size: .7rem; }
+    }
+
+    /* ── smartphone em paisagem (telas baixas) ── */
+    @media (orientation: landscape) and (max-height: 520px) {
+      .page { justify-content: flex-start; padding: 24px 18px 32px; }
+      .ornament { margin-bottom: 16px; }
+      .titulo { margin-bottom: 20px; }
+      .frame { width: min(320px, 50vw); }
+      .sep { margin: 20px 0 16px; }
+      .footer { margin-top: 24px; }
     }
   </style>
 </head>
