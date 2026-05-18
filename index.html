@@ -211,6 +211,38 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ── botão de som ── */
+    .som-btn {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 10;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(184,151,58,.5);
+      background: rgba(26,42,30,.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: var(--dourado);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .25s, border-color .25s, transform .2s;
+      opacity: 0;
+      animation: fadeUp .6s ease forwards 1.3s;
+    }
+    .som-btn:hover {
+      background: rgba(184,151,58,.18);
+      border-color: var(--dourado);
+      transform: scale(1.05);
+    }
+    .som-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    .som-btn .icon-off { display: none; }
+    .som-btn.muted .icon-on { display: none; }
+    .som-btn.muted .icon-off { display: block; }
+
     /* ── tablet (até 900px) ── */
     @media (max-width: 900px) {
       .frame { width: min(440px, 80vw); }
@@ -248,6 +280,17 @@
   </style>
 </head>
 <body>
+  <audio id="bgMusic" src="https://assets.churchofjesuschrist.org/33/25/3325ec150356cc5f8aab551ff65c6498ad0611b1/let_us_all_press_on.mp3" loop preload="auto"></audio>
+
+  <button id="somBtn" class="som-btn muted" type="button" aria-label="Ativar som">
+    <svg class="icon-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a4.5 4.5 0 0 0-2.5-4.03v8.06A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06A9 9 0 0 0 14 3.23z"/>
+    </svg>
+    <svg class="icon-off" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.21.05-.42.05-.63zM19 12c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.96 8.96 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+    </svg>
+  </button>
+
   <div class="page">
 
     <div class="ornament">
@@ -288,5 +331,49 @@
     <p class="footer">A Igreja de Jesus Cristo dos Santos dos Últimos Dias</p>
 
   </div>
+
+  <script>
+    (function () {
+      const audio = document.getElementById('bgMusic');
+      const btn = document.getElementById('somBtn');
+      audio.volume = 0.5;
+
+      function play() {
+        audio.play().then(() => {
+          btn.classList.remove('muted');
+          btn.setAttribute('aria-label', 'Silenciar');
+        }).catch(() => {
+          // navegador bloqueou — aguarda primeira interação
+        });
+      }
+
+      function pause() {
+        audio.pause();
+        btn.classList.add('muted');
+        btn.setAttribute('aria-label', 'Ativar som');
+      }
+
+      // tenta tocar imediatamente
+      play();
+
+      // se foi bloqueado, dispara no primeiro toque/clique em qualquer lugar
+      function firstInteraction() {
+        if (audio.paused) play();
+        document.removeEventListener('click', firstInteraction);
+        document.removeEventListener('touchstart', firstInteraction);
+        document.removeEventListener('keydown', firstInteraction);
+      }
+      document.addEventListener('click', firstInteraction);
+      document.addEventListener('touchstart', firstInteraction);
+      document.addEventListener('keydown', firstInteraction);
+
+      // botão liga/desliga
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (audio.paused) play();
+        else pause();
+      });
+    })();
+  </script>
 </body>
 </html>
